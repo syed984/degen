@@ -1,67 +1,80 @@
-# Degen Token
+# DegenToken
+
+DegenToken is a basic ERC-20 token contract written in Solidity. It provides functionalities for minting, transferring, burning tokens, and redeeming bonus products.
 
 ## Overview
 
-The `degen token` contract is a Solidity smart contract based on the Ethereum blockchain that implements a custom ERC-20 token named "Degen" (symbol: DGN). This token includes additional functionality such as minting, burning, and bonus redemption for various products.
+This token contract includes the following features:
 
-## Features
+- **Minting:** The owner can mint new tokens and distribute them to specific addresses.
 
-1. **ERC-20 Token Standard**: The contract follows the ERC-20 standard, providing basic functionalities such as transferring tokens and checking balances.
+- **Transferring:** Token holders can transfer their tokens to other addresses.
 
-2. **Ownable Contract**: The contract inherits from the OpenZeppelin `Ownable` contract, ensuring that certain functions can only be executed by the owner of the contract.
+- **Burning:** Token holders can burn their tokens, reducing the total supply.
 
-3. **Burnable Token**: The contract includes burn functionality, allowing token holders to destroy a specific amount of their tokens, reducing the total supply.
+- **Redeeming Bonus Products:** Users can redeem bonus products (Early Access, VIP Membership, Smartphone) in exchange for a specified amount of tokens.
 
-4. **Bonus Redemption System**: Users can redeem bonuses for products (Speaker, Alexa, Laptop) by burning a specified amount of tokens associated with each product.
+## Bonus Products
 
-## Bonus Redemption
+The contract defines the following bonus products:
 
-The contract introduces a bonus redemption system with the following features:
+- **Early Access**
+  - Cost: 250 tokens
 
-- **Bonus Enumeration**: Bonus products are identified using an enumeration named `BonusProduct`, including options such as Speaker, Alexa, and Laptop.
+- **VIP Membership**
+  - Cost: 300 tokens
 
-- **Bonus Costs and Names**: Each bonus product has an associated cost in terms of tokens and a human-readable name. These values are set during contract deployment.
+- **Smartphone**
+  - Cost: 200 tokens
 
-## Functions
+## Usage
 
-1. **Constructor**: Initializes the contract, mints an initial supply of tokens to the contract owner, and sets up bonus product costs and names.
+### Deployment
 
-2. **mint_FN**: Allows the owner to mint additional tokens and assign them to a specified address.
+1. Deploy the contract to the Ethereum blockchain.
+2. The contract owner initially receives 100 tokens.
 
-3. **Transfer_FN**: Enables users to transfer tokens to another address.
+### Minting Tokens
 
-4. **burn_FN**: Allows users to burn a specified amount of their tokens.
+- Use the `mintTokens` function to mint tokens and distribute them to a specified address.
 
-5. **redeemBonusProduct**: Allows users to redeem bonus products by burning the required tokens.
+### Transferring Tokens
 
-6. **checkPlayerBalance**: Retrieves the token balance of a specified player.
+- Use the `transferTokens` function to transfer tokens from one address to another.
 
-7. **getRewardCost**: Retrieves the cost of a specific bonus product without performing any transactions.
+### Burning Tokens
+
+- Use the `burnTokens` function to burn a specific amount of tokens, reducing the total supply.
+
+### Redeeming Bonus Products
+
+- Use the `redeemBonusProduct` function to redeem a bonus product by burning the required number of tokens.
+
+### Checking Player Balance
+
+- Use the `checkPlayerBalance` function to check the token balance of a specific address.
+
+### Getting Reward Cost
+
+- Use the `getRewardCost` function to retrieve the cost in tokens for a specific bonus product.
 
 ## Example
 
-```solidity
-// Deploy the contract
-CustomTokenV4 token = new CustomTokenV4();
+Here's a simple example of using the contract in a JavaScript environment:
 
-// Mint 50 tokens to a specific address
-token.mint_FN(addressToMint, 50);
+```javascript
+// Deploy the contract and get the contract instance
 
-// Transfer 10 tokens to another address
-token.Transfer_FN(anotherAddress, 10);
+// Mint tokens to a specific address
 
-// Burn 5 tokens
-token.burn_FN(5);
+// Transfer tokens to another address
 
-// Redeem Alexa bonus product
-token.redeemBonusProduct(CustomTokenV4.BonusProduct.Alexa);
+// Burn a specific amount of tokens
 
-// Check the balance of a player
-uint256 playerBalance = token.checkPlayerBalance(playerAddress);
+// Redeem a bonus product by burning tokens
 ```
-
 ## Author
 
-Syed Owaiz
+Syed owaiz
 
 owaiz9866@gmail.com
