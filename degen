@@ -5,15 +5,15 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
-contract CustomTokenV4 is ERC20, Ownable, ERC20Burnable {
+contract DegenToken is ERC20, Ownable, ERC20Burnable {
     event PlayerRewarded(address indexed player, uint256 rewardItemize);
     event ItemRedeemed(address indexed player, string item, uint256 cost);
     event PlayerBalanceChecked(address indexed player, uint256 balance);
 
     enum BonusProduct {
-        Speaker,
-        Alexa,
-        Laptop,
+        EarlyAccess,
+        VIPMembership,
+        Smartphone,
         MaxBonusProduct
     }
 
@@ -26,25 +26,25 @@ contract CustomTokenV4 is ERC20, Ownable, ERC20Burnable {
 
         _mint(initialOwner, initialSupply);
 
-        productCosts[BonusProduct.Speaker] = 20;
-        productCosts[BonusProduct.Alexa] = 30;
-        productCosts[BonusProduct.Laptop] = 40;
+        productCosts[BonusProduct.EarlyAccess] = 250;
+        productCosts[BonusProduct.VIPMembership] = 300;
+        productCosts[BonusProduct.Smartphone] = 200;
 
-        productNames[BonusProduct.Speaker] = "Speaker";
-        productNames[BonusProduct.Alexa] = "Alexa";
-        productNames[BonusProduct.Laptop] = "Laptop";
+        productNames[BonusProduct.EarlyAccess] = "Early Access";
+        productNames[BonusProduct.VIPMembership] = "VIP Membership";
+        productNames[BonusProduct.Smartphone] = "Smartphone";
     }
 
-    function mint_FN(address to, uint256 itemize) external onlyOwner {
-        _mint(to, itemize);
+    function mintTokens(address devisee, uint256 itemSize) external onlyOwner {
+        _mint(devisee, itemSize);
     }
 
-    function Transfer_FN(address devisee, uint256 itemize) external {
-        _transfer(msg.sender, devisee, itemize);
+    function transferTokens(address devisee, uint256 itemSize) external {
+        _transfer(msg.sender, devisee, itemSize);
     }
 
-    function burn_FN(uint256 itemize) public  {
-        _burn(msg.sender, itemize);
+    function burnTokens(uint256 itemSize) public {
+        _burn(msg.sender, itemSize);
     }
 
     function redeemBonusProduct(BonusProduct bonusProduct) external {
