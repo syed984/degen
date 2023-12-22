@@ -1,0 +1,68 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+
+contract Token is ERC20, Ownable, ERC20Burnable {
+    event PlayerRewarded(address indexed player, uint256 rewardAmount);
+    event BonusRedeemed(address indexed player, string bonus, uint256 cost);
+    event PlayerBalanceChecked(address indexed player, uint256 balance);
+
+    enum Bonus {
+        EarlyAccess,
+        VIPMembership,
+        DiscountCoupon,
+        MaxBonus
+    }
+
+    mapping(Bonus => uint256) private bonusCosts;
+    mapping(Bonus => string) private bonusNames;
+
+    constructor() ERC20("Degen", "DGN") Ownable(msg.sender) ERC20Burnable() {
+        uint256 initialSupply = 100;
+        address initialOwner = msg.sender;
+
+        _mint(initialOwner, initialSupply);
+
+        bonusCosts[Bonus.EarlyAccess] = 20;
+        bonusCosts[Bonus.VIPMembership] = 30;
+        bonusCosts[Bonus.DiscountCoupon] = 40;
+
+        bonusNames[Bonus.EarlyAccess] = "Early Access";
+        bonusNames[Bonus.VIPMembership] = "VIP Membership";
+        bonusNames[Bonus.DiscountCoupon] = "Discount Coupon";
+    }
+
+    function mintTokens(address to, uint256 amount) external onlyOwner {
+        _mint(to, amount);
+    }
+
+    function transferTokens(address recipient, uint256 amount) external {
+        _transfer(msg.sender, recipient, amount);
+    }
+
+    function burn(uint256 amount) public override {
+        _burn(msg.sender, amount);
+    }
+
+    function redeemBonus(Bonus bonus) external {
+        require(bonus < Bonus.MaxBonus, "Invalid bonus");
+
+        uint256 tokensToBurn = bonusCosts[bonus];
+        require(tokensToBurn > 0, "Invalid bonus");
+
+        require(balanceOf(msg.sender) >= tokensToBurn, "Not enough funds");
+
+        _burn(msg.sender, tokensToBurn);
+        emit BonusRedeemed(msg.sender, bonusNames[bonus], tokensToBurn);
+    }
+
+    function getPlayerBalance(address player) external view returns (uint256) {
+        return balanceOf(player);
+    }
+
+
+
+}
