@@ -5,20 +5,20 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
-contract Token is ERC20, Ownable, ERC20Burnable {
-    event PlayerRewarded(address indexed player, uint256 rewardAmount);
-    event BonusRedeemed(address indexed player, string bonus, uint256 cost);
+contract CustomTokenV4 is ERC20, Ownable, ERC20Burnable {
+    event PlayerRewarded(address indexed player, uint256 rewardItemize);
+    event ItemRedeemed(address indexed player, string item, uint256 cost);
     event PlayerBalanceChecked(address indexed player, uint256 balance);
 
-    enum Bonus {
-        EarlyAccess,
-        VIPMembership,
-        DiscountCoupon,
-        MaxBonus
+    enum BonusProduct {
+        Speaker,
+        Alexa,
+        Laptop,
+        MaxBonusProduct
     }
 
-    mapping(Bonus => uint256) private bonusCosts;
-    mapping(Bonus => string) private bonusNames;
+    mapping(BonusProduct => uint256) private productCosts;
+    mapping(BonusProduct => string) private productNames;
 
     constructor() ERC20("Degen", "DGN") Ownable(msg.sender) ERC20Burnable() {
         uint256 initialSupply = 100;
@@ -26,43 +26,44 @@ contract Token is ERC20, Ownable, ERC20Burnable {
 
         _mint(initialOwner, initialSupply);
 
-        bonusCosts[Bonus.EarlyAccess] = 20;
-        bonusCosts[Bonus.VIPMembership] = 30;
-        bonusCosts[Bonus.DiscountCoupon] = 40;
+        productCosts[BonusProduct.Speaker] = 20;
+        productCosts[BonusProduct.Alexa] = 30;
+        productCosts[BonusProduct.Laptop] = 40;
 
-        bonusNames[Bonus.EarlyAccess] = "Early Access";
-        bonusNames[Bonus.VIPMembership] = "VIP Membership";
-        bonusNames[Bonus.DiscountCoupon] = "Discount Coupon";
+        productNames[BonusProduct.Speaker] = "Speaker";
+        productNames[BonusProduct.Alexa] = "Alexa";
+        productNames[BonusProduct.Laptop] = "Laptop";
     }
 
-    function mintTokens(address to, uint256 amount) external onlyOwner {
-        _mint(to, amount);
+    function mint_FN(address to, uint256 itemize) external onlyOwner {
+        _mint(to, itemize);
     }
 
-    function transferTokens(address recipient, uint256 amount) external {
-        _transfer(msg.sender, recipient, amount);
+    function Transfer_FN(address devisee, uint256 itemize) external {
+        _transfer(msg.sender, devisee, itemize);
     }
 
-    function burn(uint256 amount) public override {
-        _burn(msg.sender, amount);
+    function burn_FN(uint256 itemize) public  {
+        _burn(msg.sender, itemize);
     }
 
-    function redeemBonus(Bonus bonus) external {
-        require(bonus < Bonus.MaxBonus, "Invalid bonus");
+    function redeemBonusProduct(BonusProduct bonusProduct) external {
+        require(bonusProduct < BonusProduct.MaxBonusProduct, "Invalid bonus product");
 
-        uint256 tokensToBurn = bonusCosts[bonus];
-        require(tokensToBurn > 0, "Invalid bonus");
+        uint256 tokensToBurn = productCosts[bonusProduct];
+        require(tokensToBurn > 0, "Invalid bonus product");
 
         require(balanceOf(msg.sender) >= tokensToBurn, "Not enough funds");
 
         _burn(msg.sender, tokensToBurn);
-        emit BonusRedeemed(msg.sender, bonusNames[bonus], tokensToBurn);
+        emit ItemRedeemed(msg.sender, productNames[bonusProduct], tokensToBurn);
     }
 
-    function getPlayerBalance(address player) external view returns (uint256) {
+    function checkPlayerBalance(address player) external view returns (uint256) {
         return balanceOf(player);
     }
 
-
-
+    function getRewardCost(BonusProduct bonusProduct) external view returns (uint256) {
+        return productCosts[bonusProduct];
+    }
 }
